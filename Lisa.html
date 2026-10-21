@@ -188,20 +188,20 @@ body {
   }
 
   .card {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 24px;
-    padding: clamp(24px, 6vw, 50px) clamp(20px, 5vw, 40px) 28px;
-    max-width: 520px;
-    width: 100%;
-    text-align: center;
-    color: #fff;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
-    transform: scale(0.8);
-    transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  padding: clamp(16px, 4vw, 40px) clamp(12px, 3vw, 30px) 20px; 
+  max-width: min(520px, 92vw); 
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+  transform: scale(0.8);
+  transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
 
   .invitation.show .card {
     transform: scale(1);
@@ -210,8 +210,8 @@ body {
   .card h1 {
     font-family: 'Courier', 'monospace';
     font-size: 18px;
-    font-size: clamp(1.5em, 6vw, 2.4em);
-    margin-bottom: 10px;
+    font-size: clamp(1.2em, 5vw, 2em);
+    margin-bottom: 6px;
     background: linear-gradient(135deg, #ffe066, #ff6b9d);
     -webkit-background-clip: text;
     background-clip: text;
@@ -221,9 +221,9 @@ body {
 
   .card .subtitle {
     font-family: 'Courier';
-    font-size: 1.1em;
+    font-size: clamp(0.9em, 3vw, 1.05em);
     color: #ffb3c6;
-    margin-bottom: 25px;
+    margin-bottom: 14px;
     font-style: italic;
   }
 
@@ -232,14 +232,14 @@ body {
     width: 80px;
     height: 2px;
     background: linear-gradient(90deg, transparent, #ff6b9d, transparent);
-    margin: 25px auto;
+    margin: 20px auto;
   }
 
   .card p {
     font-family: 'Courier'
-    font-size: clamp(1em, 3.5vw, 1.15em);
+    font-size: clamp(0.85em, 3vw, 1.05em);
     line-height: 1.7;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     color: #f0f0f0;
   }
 
@@ -261,11 +261,6 @@ body {
   .card .details p {
     margin: 8px 0;
     font-size: 1.05em;
-  }
-
-  .card .emoji {
-    font-size: 1.8em;
-    margin-top: 20px;
   }
 
   /* Анимация появления текста */
