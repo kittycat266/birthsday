@@ -193,24 +193,23 @@ body {
   -webkit-backdrop-filter: blur(15px);
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 24px;
-  padding: clamp(16px, 4vw, 40px) clamp(12px, 3vw, 30px) 20px; 
-  max-width: min(420px, 88vw); 
+  padding: clamp(16px, 4vw, 40px) clamp(12px, 3vw, 30px) 20px;
+  max-width: min(470px, 90vw);
   width: 100%;
   text-align: center;
   color: #fff;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
-  transform: scale(0.7);
+  transform: scale(0.75);
   transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
   .invitation.show .card {
-    transform: scale(0.85);
+    transform: scale(0.92);
   }
 
   .card h1 {
     font-family: 'Courier', 'monospace';
-    font-size: 18px;
-    font-size: clamp(1.2em, 5vw, 2em);
+    font-size: clamp(1.3em, 4.5vw, 1.75em);
     margin-bottom: 6px;
     background: linear-gradient(135deg, #ffe066, #ff6b9d);
     -webkit-background-clip: text;
@@ -220,8 +219,8 @@ body {
   }
 
   .card .subtitle {
-    font-family: 'Courier';
-    font-size: clamp(0.9em, 3vw, 1.05em);
+    font-family: 'Courier', monospace;
+    font-size: clamp(1em, 3.5vw, 1.15em);
     color: #ffb3c6;
     margin-bottom: 14px;
     font-style: italic;
@@ -236,26 +235,22 @@ body {
   }
 
   .card p {
-    font-family: 'Courier','monospace';
-    font-size: clamp(0.85em, 3vw, 1.05em);
+    font-family: 'Courier', monospace;
+    font-size: clamp(1em, 3.5vw, 1.15em);
     line-height: 1.55;
     margin-bottom: 10px;
     color: #f0f0f0;
   }
 
   .card .highlight {
-    font-family: 'Courier','monospace';
+    font-family: 'Courier', monospace;
     font-weight: bold;
-    font-size: 1.3em;
     color: #ffe066;
   }
-
-  .card .details {
-    margin-top: 30px;
-    padding: 20px;
-    background: rgba(255, 107, 157, 0.15);
-    border-radius: 15px;
-    border: 1px solid rgba(255, 107, 157, 0.3);
+  
+  .card .details p {
+    margin: 6px 0;
+    font-size: clamp(1em, 3.5vw, 1.15em);
   }
 
   .card .details p {
