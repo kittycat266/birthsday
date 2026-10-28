@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Приглашение на День Рождения</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+html {
+  min-height: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #1f0a1a !important;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Georgia', serif;
+  background: linear-gradient(135deg, #1f0a1a 0%, #3d1029 50%, #5c1a3d 100%) !important;
+  background-attachment: fixed !important;
+  background-size: cover !important;
+  overflow-x: hidden;
+}
+@media (max-width: 480px) {
+  .close-btn {
+    margin-top: 16px;
+    padding: 7px 18px;
+    font-size: 13px;
+  }
+}
+
+  /* ===== Звёздный фон (мерцание) ===== */
+  .stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 1;
+    transition: opacity 1.5s ease;
+  }
+
+  .stars.visible {
+    opacity: 1;
+  }
+
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 2s infinite ease-in-out;
+    box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.8);
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; transform: scale(0.8); }
+    50%      { opacity: 1;   transform: scale(1.3); }
+  }
+
+  /* ===== Конверт ===== */
+  .envelope-wrapper {
+    position: relative;
+    z-index: 5;
+    cursor: pointer;
+    perspective: 1000px;
+    transition: transform 0.3s;
+  }
+
+  .envelope-wrapper:hover {
+    transform: scale(1.03);
+  }
+
+  .envelope {
+ 	position: relative;
+    width: min(320px, 85vw);
+  	aspect-ratio: 320 / 220;
+  	height: auto;
+    background: linear-gradient(135deg, #ff6b9d, #c44569);
+    border-radius: 10px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Клапан конверта (треугольник сверху) */
+  .flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 55%;
+  background: #e84393;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top;
+  transition: transform 0.8s ease;
+  z-index: 3;
+  border-radius: 10px 10px 0 0;
+}
+
+  /* Нижняя часть конверта (карман) */
+  .pocket {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60%;
+  background: #ff6b9d;
+  clip-path: polygon(0 100%, 50% 0, 100% 100%);
+  border-radius: 0 0 10px 10px;
+  z-index: 2;
+}
+
+  /* Печать/сердечко */
+  .seal {
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: clamp(34px, 15%, 50px);
+    height: clamp(34px, 15%, 50px);
+    background: radial-gradient(circle at 30% 30%, #ffe066, #ffcc00);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(16px, 7%, 24px);
+    z-index: 4;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: opacity 0.4s;
+  }
+
+  /* Кнопка "Открыть" */
+  .open-btn {
+    position: absolute;
+    bottom: clamp(-60px, -18%, -50px);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: clamp(10px, 3vw, 14px) clamp(24px, 8vw, 40px);
+    font-family: 'Courier', 'monospace';
+    font-size: clamp(14px, 4vw, 18px);
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(135deg, #ff6b9d, #c44569);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.3s;
+    box-shadow: 0 8px 20px rgba(255, 107, 157, 0.4);
+    white-space: nowrap;
+  }
+
+  .open-btn:hover {
+    background: linear-gradient(135deg, #ff85a2, #e84393);
+    box-shadow: 0 10px 30px rgba(255, 107, 157, 0.7);
+    transform: translateX(-50%) translateY(-3px);
+  }
+
+  .open-btn:active {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ===== Приглашение (появляется после открытия) ===== */
+  .invitation {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+    background: linear-gradient(135deg, #1f0a1a 0%, #3d1029 50%, #5c1a3d 100%);
+  }
+
+  .invitation.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  padding: clamp(16px, 4vw, 40px) clamp(12px, 3vw, 30px) 20px;
+  max-width: min(470px, 90vw);
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+  transform: scale(0.75);
+  transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+  .invitation.show .card {
+    transform: scale(0.92);
+  }
+
+  .card h1 {
+    font-family: 'Courier', 'monospace';
+    font-size: clamp(1.3em, 4.5vw, 1.75em);
+    margin-bottom: 6px;
+    background: linear-gradient(135deg, #ffe066, #ff6b9d);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
+  }
+
+  .card .subtitle {
+    font-family: 'Courier', monospace;
+    font-size: clamp(1em, 3.5vw, 1.15em);
+    color: #ffb3c6;
+    margin-bottom: 14px;
+    font-style: italic;
+  }
+
+  .divider {
+    font-family: 'Courier';
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ff6b9d, transparent);
+    margin: 14px auto;
+  }
+
+  .card p {
+    font-family: 'Courier', monospace;
+    font-size: clamp(1em, 3.5vw, 1.15em);
+    line-height: 1.55;
+    margin-bottom: 10px;
+    color: #f0f0f0;
+  }
+
+  .card .highlight {
+    font-family: 'Courier', monospace;
+    font-weight: bold;
+    color: #ffe066;
+  }
+  
+  .card .details p {
+    margin: 6px 0;
+    font-size: clamp(1em, 3.5vw, 1.15em);
+  }
+
+  .card .details p {
+    margin: 8px 0;
+    font-size: 1.05em;
+  }
+
+  /* Анимация появления текста */
+  .fade-item {
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .invitation.show .fade-item {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .invitation.show .fade-item:nth-child(1) { transition-delay: 0.3s; }
+  .invitation.show .fade-item:nth-child(2) { transition-delay: 0.5s; }
+  .invitation.show .fade-item:nth-child(3) { transition-delay: 0.7s; }
+  .invitation.show .fade-item:nth-child(4) { transition-delay: 0.9s; }
+  .invitation.show .fade-item:nth-child(5) { transition-delay: 1.1s; }
+  .invitation.show .fade-item:nth-child(6) { transition-delay: 1.3s; }
+
+.close-btn {
+  display: inline-block;
+  margin: 20px 0 0;
+  padding: 8px 22px;
+  font-family: 'Georgia', serif;
+  font-size: 14px;
+  color: #fff;
+  background: transparent !important;   /* ← принудительно убираем фон */
+  border: 1.5px solid rgba(255, 107, 157, 0.6);
+  border-radius: 50px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  box-shadow: none !important;          /* ← убираем тень, если была */
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: rgba(255, 107, 157, 0.2) !important; /* лёгкая заливка при наведении */
+  border-color: #ff6b9d;
+  box-shadow: 0 0 16px rgba(255, 107, 157, 0.4) !important;
+  transform: translateY(-1px);
+}
+
+.close-btn:active {
+  transform: translateY(0);
+}
+
+/* Убираем фокус-обводку браузера */
+.close-btn:focus {
+  outline: none;
+}
+  
+  /* ===== Канвас для конфетти ===== */
+  #confettiCanvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 20;
+  }
+  @media (max-width: 480px) {
+  .envelope-wrapper {
+    transform: scale(1);
+  }
+
+  .open-btn {
+    bottom: -55px;
+  }
+
+  .card .details {
+    padding: 14px;
+  }
+}
+
+/* Маленькая высота экрана (ландшафт на телефоне) */
+@media (max-height: 500px) {
+  body {
+    align-items: flex-start;
+    padding: 20px 0;
+    overflow-y: auto;
+  }
+}
+ 
+  .stars-in-invitation {
+  opacity: 1;      /* всегда видимы внутри */
+  z-index: 1;      /* под карточкой, но над градиентом */
+}
+  body > *,
+#outer-wrapper,
+#header-wrapper,
+#content-wrapper,
+#main-wrapper,
+#footer-wrapper,
+#header,
+#footer,
+.content-outer,
+.content-inner,
+.content-fauxcolumn-outer,
+.content-fauxcolumn-outer > *,
+.main-outer,
+.main-inner,
+.blog-posts,
+.post,
+.post-body,
+.post-outer,
+.page,
+.page-body,
+#content,
+#main {
+  background: transparent !important;
+  background-color: transparent !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  max-width: none !important;
+}
+  .countdown {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 18px 0;
+  flex-wrap: wrap;
+}
+
+.countdown-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 46px;
+  padding: 7px 6px;
+  background: rgba(255, 107, 157, 0.15);
+  border: 1px solid rgba(255, 107, 157, 0.35);
+  border-radius: 10px;
+  box-shadow: inset 0 0 08px rgba(255, 107, 157, 0.2);
+}
+
+.countdown-num {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #ffe066;
+  line-height: 1;
+  text-shadow: 0 0 8px rgba(255, 224, 102, 0.6);
+  font-variant-numeric: tabular-nums;
+}
+
+.countdown-label {
+  font-size: 0.6em;
+  color: #ffb3c6;
+  margin-top: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Когда время вышло */
+.countdown.done .countdown-item {
+  display: none;
+}
+
+.countdown.done::after {
+  content: 'Сегодня!';
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #ffe066;
+  text-shadow: 0 0 15px rgba(255, 224, 102, 0.8);
+  animation: pulse 1.2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1);   opacity: 1; }
+  50%      { transform: scale(1.08); opacity: 0.85; }
+}
+
+/* На мобилке — компактнее */
+@media (max-width: 480px) {
+  .countdown {
+    gap: 6px;
+  }
+  .countdown-item {
+    min-width: 40px;
+    padding: 6px 5px;
+  }
+  .countdown-num {
+    font-size: 1.1em;
+  }
+  .countdown-label {
+    font-size: 0.55em;
+  }
+}
+</style>
+</head>
+<body>
+
+  <!-- Звёздный фон -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Конфетти -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- Конверт -->
+  <div class="envelope-wrapper" id="envelopeWrapper">
+    <div class="envelope">
+      <div class="flap" id="flap"></div>
+      <div class="pocket"></div>
+      <div class="seal" id="seal">💌</div>
+    </div>
+    <button class="open-btn" id="openBtn">Открыть</button>
+  </div>
+
+  <!-- Само приглашение -->
+  <div class="invitation" id="invitation">
+    <div class="stars stars-in-invitation" id="starsInvitation"></div>
+    <div class="card">
+      <h1 class="fade-item">Вы приглашены</h1>
+      <p class="subtitle fade-item">на мой День Рождения</p>
+      <div class="divider fade-item"></div>
+      <p class="fade-item">
+        Дорогие <span class="highlight">Алекс,</span>
+    </p>
+      <p class="fade-item">
+        Очень жду тебя на церемонии получения моей <span class="highlight">кьютимарки,</span> ну или просто торт поедим.
+      </p>
+      <div class="details fade-item">
+        <div class="countdown fade-item" id="countdown">
+    <div class="countdown-item">
+      <span class="countdown-num" id="cd-days">0</span>
+      <span class="countdown-label">дней</span>
+    </div>
+    <div class="countdown-item">
+      <span class="countdown-num" id="cd-hours">0</span>
+      <span class="countdown-label">часов</span>
+    </div>
+    <div class="countdown-item">
+      <span class="countdown-num" id="cd-mins">0</span>
+      <span class="countdown-label">минут</span>
+    </div>
+    <div class="countdown-item">
+      <span class="countdown-num" id="cd-secs">0</span>
+      <span class="countdown-label">секунд</span>
+    </div>
+  </div>
+        <p>📅 <strong>Дата:</strong> 28 ноября</p>
+        <p>🕕 <strong>Время:</strong> 16:00</p>
+        <p>📍 <strong>Место:</strong> ул. Молодогвардейцев, 59, кв. 210</p>
+      </div>
+      <button class="close-btn" id="closeBtn">Закрыть</button>
+    </div>
+  </div>
+
+<script>
+  // ==== Генерация мерцающих звёзд ====
+  const starsContainer = document.getElementById('stars');
+  const STAR_COUNT = 120;
+
+  for (let i = 0; i < STAR_COUNT; i++) {
+    const star = document.createElement('div');
+    star.classList.add('star');
+    const size = Math.random() * 3 + 1; // от 1 до 4px
+    star.style.width = size + 'px';
+    star.style.height = size + 'px';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.animationDelay = Math.random() * 2 + 's';
+    star.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
+    starsContainer.appendChild(star);
+  }
+
+  // ==== Логика открытия ====
+  const openBtn = document.getElementById('openBtn');
+  const envelopeWrapper = document.getElementById('envelopeWrapper');
+  const flap = document.getElementById('flap');
+  const seal = document.getElementById('seal');
+  const invitation = document.getElementById('invitation');
+
+  let opened = false;
+
+const closeBtn = document.getElementById('closeBtn');
+
+// ===== ОТКРЫТИЕ =====
+openBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (opened) return;
+  opened = true;
+
+  // 1. Клапан открывается
+  flap.style.transform = 'rotateX(180deg)';
+  // 2. Печать исчезает
+  seal.style.opacity = '0';
+  // 3. Кнопка "Открыть" прячется
+  openBtn.style.opacity = '0';
+  openBtn.style.pointerEvents = 'none';
+  // 4. Конверт уменьшается и растворяется
+  envelopeWrapper.style.transition = 'opacity 0.8s ease 0.5s, transform 0.8s ease 0.5s';
+  envelopeWrapper.style.opacity = '0';
+  envelopeWrapper.style.transform = 'scale(0.5) translateY(50px)';
+  // 5. Звёзды
+  setTimeout(() => starsContainer.classList.add('visible'), 300);
+  // 6. Карточка
+  setTimeout(() => invitation.classList.add('show'), 1000);
+  // 7. Конфетти
+  setTimeout(() => createConfetti(180), 1100);
+  setTimeout(() => createConfetti(120), 1600);
+});
+
+// ===== ЗАКРЫТИЕ =====
+closeBtn.addEventListener('click', () => {
+  if (!opened) return;
+  opened = false;
+
+  // 1. Карточка растворяется
+  invitation.classList.remove('show');
+
+  // 2. Ждём, пока карточка исчезнет (1s), потом возвращаем конверт
+  setTimeout(() => {
+    // Возвращаем конверт
+    envelopeWrapper.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+    envelopeWrapper.style.opacity = '1';
+    envelopeWrapper.style.transform = 'scale(1) translateY(0)';
+
+    // Клапан обратно
+    flap.style.transform = 'rotateX(0deg)';
+
+    // Возвращаем печать и кнопку "Открыть"
+    setTimeout(() => {
+      seal.style.opacity = '1';
+      openBtn.style.opacity = '1';
+      openBtn.style.pointerEvents = 'auto';
+    }, 400); // чуть позже, чтобы не дёргалось в момент появления
+  }, 900);
+
+  // 3. Звёзды можно оставить (они красиво остаются на фоне).
+  // Если хочешь, чтобы гасли — раскомментируй:
+  // starsContainer.classList.remove('visible');
+});
+
+  // ==== Конфетти ====
+  const canvas = document.getElementById('confettiCanvas');
+  const ctx = canvas.getContext('2d');
+  let confettiParticles = [];
+  let confettiRunning = false;
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  const CONFETTI_COLORS = [
+    '#ff6b9d', '#ffe066', '#6bcB77', '#4d96ff',
+    '#c44569', '#ff85a2', '#ffd93d', '#a06cd5'
+  ];
+
+  function createConfetti(count = 150) {
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = Math.random() * 12 + 4;
+      confettiParticles.push({
+        x: cx,
+        y: cy,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 3,
+        size: Math.random() * 8 + 4,
+        color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+        rotation: Math.random() * Math.PI * 2,
+        rotationSpeed: (Math.random() - 0.5) * 0.3,
+        gravity: 0.18,
+        friction: 0.985,
+        opacity: 1,
+        shape: Math.random() > 0.5 ? 'rect' : 'circle',
+        life: 1
+      });
+    }
+
+    if (!confettiRunning) {
+      confettiRunning = true;
+      requestAnimationFrame(animateConfetti);
+    }
+  }
+
+  function animateConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let i = confettiParticles.length - 1; i >= 0; i--) {
+      const p = confettiParticles[i];
+
+      p.vx *= p.friction;
+      p.vy *= p.friction;
+      p.vy += p.gravity;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rotation += p.rotationSpeed;
+      p.life -= 0.008;
+      p.opacity = Math.max(0, p.life);
+
+      // Убираем улетевшие/потухшие частицы
+      if (p.life <= 0 || p.y > canvas.height + 50) {
+        confettiParticles.splice(i, 1);
+        continue;
+      }
+
+      ctx.save();
+      ctx.globalAlpha = p.opacity;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rotation);
+      ctx.fillStyle = p.color;
+
+      if (p.shape === 'rect') {
+        ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+      } else {
+        ctx.beginPath();
+        ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+
+    if (confettiParticles.length > 0) {
+      requestAnimationFrame(animateConfetti);
+    } else {
+      confettiRunning = false;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+  const starsInvitationContainer = document.getElementById('starsInvitation');
+for (let i = 0; i < 120; i++) {
+  const star = document.createElement('div');
+  star.classList.add('star');
+  const size = Math.random() * 3 + 1;
+  star.style.width = size + 'px';
+  star.style.height = size + 'px';
+  star.style.left = Math.random() * 100 + '%';
+  star.style.top = Math.random() * 100 + '%';
+  star.style.animationDelay = Math.random() * 2 + 's';
+  star.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
+  starsInvitationContainer.appendChild(star);
+}
+  const BIRTHDAY_DATE = new Date('2026-11-28T16:00:00');
+
+const cdDays  = document.getElementById('cd-days');
+const cdHours = document.getElementById('cd-hours');
+const cdMins  = document.getElementById('cd-mins');
+const cdSecs  = document.getElementById('cd-secs');
+const countdownEl = document.getElementById('countdown');
+
+function updateCountdown() {
+  const now = new Date();
+  const diff = BIRTHDAY_DATE - now;
+
+  // Время вышло — показываем "Сегодня! 🎉"
+  if (diff <= 0) {
+    countdownEl.classList.add('done');
+    return;
+  }
+
+  const totalSec = Math.floor(diff / 1000);
+  const days  = Math.floor(totalSec / 86400);
+  const hours = Math.floor((totalSec % 86400) / 3600);
+  const mins  = Math.floor((totalSec % 3600) / 60);
+  const secs  = totalSec % 60;
+
+  cdDays.textContent  = days;
+  cdHours.textContent = String(hours).padStart(2, '0');
+  cdMins.textContent  = String(mins).padStart(2, '0');
+  cdSecs.textContent  = String(secs).padStart(2, '0');
+}
+
+updateCountdown();
+setInterval(updateCountdown, 1000);
+</script>
+</body>
+</html>
